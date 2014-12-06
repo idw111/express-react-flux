@@ -11,12 +11,22 @@ define([
 		},
 
 		handleCommentSubmit: function(comment) {
-			var comments = this.state.data;
-			var newComments = comments.concat([comment]);
-			this.setState(newComments);
-			$.post(this.props.url, comment, function(data) {
+			console.log(comment)
+			this.props.socket.emit('comment', JSON.stringify({channel: this.props.channel, data: comment}));
+		},
+
+		bind: function(socket) {
+			socket.on('comments', function(data) {
+				console.log('comments', data);
 				this.setState({data: data});
 			}.bind(this));
+
+			socket.on('comment', function(data) {
+				var comments = this.state.data;
+				this.setState({data: comments.concat([data])});
+			}.bind(this));
+
+			socket.emit('comments', JSON.stringify({channel: this.props.channel}));
 		},
 
 		getInitialState: function() {
@@ -24,8 +34,8 @@ define([
 		},
 
 		componentDidMount: function() {
-			this.loadComments();
-			setInterval(this.loadComments, this.props.pollInterval);
+			this.bind(this.props.socket);
+			// this.loadComments();
 		},
 
 		render: function() {
@@ -54,7 +64,7 @@ define([
 	var CommentList = React.createClass({
 		render: function() {
 			var commentNodes = this.props.data.map(function(comment) {
-				return (<Comment author={comment.author}>{comment.text}</Comment>);
+				return (<Comment author={comment.author}>{comment.message}</Comment>);
 			});
 			return (
 				<div className='commentList'>{commentNodes}</div>
@@ -66,11 +76,11 @@ define([
 		handleSubmit: function(e) {
 			e.preventDefault();
 			var author = this.refs.author.getDOMNode().value.trim();
-			var text = this.refs.text.getDOMNode().value.trim();
-			if (!author || !text) return;
-			this.props.onCommentSubmit({author: author, text: text});
+			var message = this.refs.message.getDOMNode().value.trim();
+			if (!author || !message) return;
+			this.props.onCommentSubmit({author: author, message: message});
 			this.refs.author.getDOMNode().value = '';
-			this.refs.text.getDOMNode().value = '';
+			this.refs.message.getDOMNode().value = '';
 			return;
 		},
 
@@ -78,13 +88,19 @@ define([
 			return (
 				<form className='commentForm' onSubmit={this.handleSubmit}>
 					<input type='text' placeholder='your name' ref='author' />
-					<input type='text' placeholder='say something' ref='text' />
+					<input type='text' placeholder='say something' ref='message' />
 					<input type='submit' value='post' />
 				</form>
 			);
 		}
 	});
 
-	React.render(<CommentBox url='/comments.json' pollInterval={2000} />, $('#content').get(0));
+	var render = function(socket, channel) {
+		React.render(<CommentBox url='/comments.json' socket={socket} channel={channel} />, $('#content').get(0));
+	};
+
+	return {
+		render: render
+	};
 
 });

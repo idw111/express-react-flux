@@ -3,6 +3,7 @@ require.config({
 
 	paths: {
 		jquery: '//code.jquery.com/jquery-1.10.0.min',
+		socketio: '//cdn.socket.io/socket.io-1.2.0',
 		react: '//fb.me/react-0.12.1',
 		JSXTransformer: './JSXTransformer',
 		jsx: './jsx',
@@ -25,10 +26,8 @@ require.config({
 });
 
 require([
-	'react',
+	'./socket',
 	'jsx!components/comment'
-], function(React, JSXTransformer, CommentBox) {
-	// var CommentBox = comment.CommentBox;
-	// console.log(CommentBox);
-	// React.render(<CommentBox url='/comments.json' pollInterval={2000} />, $('#content').get(0));
+], function(socket, CommentBox) {
+	CommentBox.render(socket, 1);
 });

@@ -1,28 +1,29 @@
 var express = require('express');
 var router = express.Router();
+var Comment = require('../model/Comment');
 
-/* GET home page. */
 router.get('/', function(req, res) {
-	return res.redirect('/index.html');
+	return res.render('index');
 });
 
 router.get('/comments.json', function(req, res) {
-	var n = Math.floor(Math.random() * 1000000);
-	res.json([
-		{"author": "Pete Hunt", "text": "This is one comment " + n},
-		{"author": "Jornan Walke", "text": "This is *another* comment " + n}
-	]);
+	Comment.find({}, function(err, comments) {
+		if (err) throw err;
+		return res.json(comments);
+	});
 });
 
 router.post('/comments.json', function(req, res) {
-	var n = Math.floor(Math.random() * 1000000);
 	var author = req.param('author') || 'NA';
-	var text = req.param('text') || 'NA';
-	res.json([
-		{author: "Pete Hunt", text: "This is one comment " + n},
-		{author: "Jornan Walke", text: "This is *another* comment " + n},
-		{author: author, text: text}
-	]);
+	var message = req.param('message') || 'NA';
+	var comment = new Comment({author: author, message: message});
+	comment.save(function(err) {
+		if (err) throw err;
+		Comment.find({}, function(err, comments) {
+			if (err) throw err;
+			return res.json(comments);
+		});
+	});
 });
 
 module.exports = router;
