@@ -1,0 +1,35 @@
+.freecell-game {
+	.decks {
+		clear: both;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		>li {
+			float: left;
+			width: 71px;
+			margin-right: 8px;
+			overflow: hidden;
+			list-style: none;
+			&:last-child { margin-right: 0; }
+			.deck {
+				overflow: hidden;
+				margin: 0;
+				padding: 0;
+				li.card {
+					clear: both;
+					margin: -77px 0 0;
+					padding: 0;
+					width: 71px;
+					height: 96px;
+					text-align: center;
+					line-height: 94px;
+					overflow: hidden;
+					background: url('http://freecellproject.com/wp-content/plugins/freecell/images/cards.js.png') no-repeat 0 0;
+					&:first-child {
+						margin-top: 0;
+					}
+				}
+			}
+		}
+	}
+}

@@ -4,6 +4,7 @@ require.config({
 	paths: {
 		jquery: '//code.jquery.com/jquery-1.10.0.min',
 		socketio: '//cdn.socket.io/socket.io-1.2.0',
+		fluxxor: './fluxxor',
 		react: '//fb.me/react-0.12.1',
 		JSXTransformer: './JSXTransformer',
 		jsx: './jsx',
@@ -26,8 +27,6 @@ require.config({
 });
 
 require([
-	'./socket',
-	'jsx!components/comment'
-], function(socket, CommentBox) {
-	CommentBox.render(socket, 1);
+	'./flux'
+], function() {
 });
