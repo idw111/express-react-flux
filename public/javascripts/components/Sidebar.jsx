@@ -1,17 +1,27 @@
 define([
+	'fluxxor',
 	'react'
-], function(React) {
+], function(Fluxxor, React) {
+
+	var FluxMixin = Fluxxor.FluxMixin(React);
+	var StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 	/**
 	 * - Sidebar
 	 *   - SidebarHeader
-	 *   - SidebarCaption
 	 *   - SidebarMenu
+	 *     - SidebarCaption
 	 *     - SidebarMenuItem
 	 *   - SidebarSeperator
 	 */
-	
+
 	var Sidebar = React.createClass({
+		mixins: [FluxMixin],
+
+		getStateFromFlux: function() {
+			
+		},
+
 		render: function() {
 			return (
 				<div className='sidebar'>
@@ -37,8 +47,8 @@ define([
 	var SidebarHeader = React.createClass({
 		render: function() {
 			return (
-				<h2 className='sidebar-header'>
-					<span className='icon-batch'></span>
+				<h2 className='header'>
+					<span className='icon'></span>
 					<span className='text'>{this.props.children}</span>
 				</h2>
 			);
@@ -83,12 +93,6 @@ define([
 		}
 	});
 
-	var render = function(el) {
-		React.render(<Sidebar />, el);
-	};
-
-	return {
-		render: render
-	};
+	return Sidebar;
 
 });
