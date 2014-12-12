@@ -16,15 +16,18 @@ define([
 	 */
 
 	var Sidebar = React.createClass({
-		mixins: [FluxMixin],
+		mixins: [FluxMixin, StoreWatchMixin('ContextStore')],
 
 		getStateFromFlux: function() {
-			
+			return {
+				context: this.getFlux().store('ContextStore').getState()
+			}
 		},
 
 		render: function() {
+			var className = !this.state.context.sidebarAnimate ? 'sidebar' : 'sidebar ' + (this.state.context.sidebar ? 'visible' : 'hidden');
 			return (
-				<div className='sidebar'>
+				<div className={className}>
 					<SidebarHeader>{this.state.circle ? this.state.circle.name : 'Home'}</SidebarHeader>
 					<SidebarMenu caption='circle menu' items={this.getCircleMenu()} />
 				</div>
@@ -48,8 +51,10 @@ define([
 		render: function() {
 			return (
 				<h2 className='header'>
-					<span className='icon'></span>
-					<span className='text'>{this.props.children}</span>
+					<a href='#'>
+						<span className='batch'>&#xf0c7;</span>
+						<span className='text'>{this.props.children}</span>
+					</a>
 				</h2>
 			);
 		}
@@ -80,7 +85,9 @@ define([
 	var SidebarMenuItem = React.createClass({
 		render: function() {
 			return (
-				<li className='sidebar-menu-item'><a href='{this.props.href}'>{this.props.children}</a></li>
+				<li className='sidebar-menu-item'>
+					<a href='{this.props.href}'>{this.props.children}</a>
+				</li>
 			);
 		}
 	});

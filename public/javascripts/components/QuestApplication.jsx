@@ -2,9 +2,8 @@ define([
 	'fluxxor',
 	'react',
 	'jsx!components/Sidebar',
-	'jsx!components/Header',
-	'jsx!components/Screen'
-], function(Fluxxor, React, Sidebar, Header, Screen) {
+	'jsx!components/Header'
+], function(Fluxxor, React, Sidebar, Header) {
 
 	var FluxMixin = Fluxxor.FluxMixin(React);
 	var StoreWatchMixin = Fluxxor.StoreWatchMixin;
@@ -33,9 +32,10 @@ define([
 		render: function() {
 			var flux = this.getFlux();
 			return (
-				<Sidebar flux={flux} />
-				<Header flux={flux} />
-				<Screen flux={flux} />
+				<div className='application'>
+					<Sidebar flux={flux} />
+					<Header flux={flux} />
+				</div>
 			);
 		}
 	});
